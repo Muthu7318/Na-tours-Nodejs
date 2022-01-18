@@ -14,8 +14,10 @@
   "author": "Muthukumaran",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.14",
     "morgan": "^1.10.0",
     "ndb": "^1.1.5",
