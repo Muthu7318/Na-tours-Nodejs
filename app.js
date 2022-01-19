@@ -18,6 +18,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(express.json()); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
 app.use(express.static(`${__dirname}/public/`));
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  console.log(req.headers);
+  next();
+});
 // ROUTES
 app.use('/api/v1/tours', tourRouter); // this is called as mounting a router
 app.use('/api/v1/users', userRouter);
@@ -43,11 +49,6 @@ module.exports = app;
 // app.use((req, res, next) => {
 //   console.log('Hello from middleware'); // our own middleware that we defined
 //   next(); // it is very important to call next middleware
-// });
-
-// app.use((req, res, next) => {
-//   req.requestTime = new Date().toISOString();
-//   next();
 // });
 
 // // app.get is the http method for getting the request
