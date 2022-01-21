@@ -3,6 +3,8 @@ const express = require('express');
 const morgan = require('morgan'); //Thirdparty middleware
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xssClean = require('xss-clean');
 // it is a common practice to have all express code in app.js
 
 const AppError = require('./utils/appError');
@@ -35,6 +37,10 @@ app.use(
   })
 ); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
 
+// Data sanitization against nosql query injection
+app.use(mongoSanitize());
+// Data sanitization against XSS
+app.use(xssClean());
 //serving static files
 app.use(express.static(`${__dirname}/public/`));
 
