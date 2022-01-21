@@ -1,21 +1,28 @@
 /* eslint-disable prettier/prettier */
 const express = require('express');
+const morgan = require('morgan'); //Thirdparty middleware
+const rateLimit = require('express-rate-limit');
+// it is a common practice to have all express code in app.js
+
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
-// it is a common practice to have all express code in app.js
-
-const morgan = require('morgan'); //Thirdparty middleware
-
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-const AppError = require('./utils/appError');
-const globalErrorHandler = require('./controllers/errorController');
-
+// Global middlewares
 console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Third party middleware
 }
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, Please try again in an hour',
+});
+app.use('/api', limiter);
 app.use(express.json()); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
 app.use(express.static(`${__dirname}/public/`));
 
