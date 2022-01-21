@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan'); //Thirdparty middleware
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 // it is a common practice to have all express code in app.js
 
 const AppError = require('./utils/appError');
@@ -12,20 +13,32 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // Global middlewares
-console.log(process.env.NODE_ENV);
+// set security http headers
+app.use(helmet());
+// development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Third party middleware
 }
 
+// limit request from same api
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, Please try again in an hour',
 });
 app.use('/api', limiter);
-app.use(express.json()); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
+
+// body parser
+app.use(
+  express.json({
+    limit: '10kb',
+  })
+); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
+
+//serving static files
 app.use(express.static(`${__dirname}/public/`));
 
+//test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   console.log(req.headers);
