@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
+const hpp = require('hpp');
 // it is a common practice to have all express code in app.js
 
 const AppError = require('./utils/appError');
@@ -41,6 +42,20 @@ app.use(
 app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xssClean());
+
+// prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingQuantity',
+      'ratingAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price',
+    ],
+  })
+);
 //serving static files
 app.use(express.static(`${__dirname}/public/`));
 
