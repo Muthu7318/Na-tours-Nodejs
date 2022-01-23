@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
+const User = require('./usermodel');
 
 /*
 1) mongoose is all about models, models are like blueprint that we use to create documents like classes in js
@@ -112,6 +113,8 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    // guides: Array,
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
@@ -129,6 +132,13 @@ tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
+
 // tourSchema.pre('save', (next) => {
 //   console.log('will save the doc..');
 //   next();
