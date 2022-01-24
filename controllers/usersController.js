@@ -16,17 +16,17 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+// exports.getAllUsers = catchAsync(async (req, res, next) => {
+//   const users = await User.find();
 
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users: users,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: 'success',
+//     results: users.length,
+//     data: {
+//       users: users,
+//     },
+//   });
+// });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) create error if posts password data
@@ -62,27 +62,17 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  res.status(200).json({
-    status: 'error',
-    message: 'This route is not defined yet',
-  });
-};
-
 exports.createUser = (req, res) => {
   res.status(200).json({
     status: 'error',
-    message: 'This route is not defined yet',
-  });
-};
-exports.updateUser = (req, res) => {
-  res.status(200).json({
-    status: 'error',
-    message: 'This route is not defined yet',
+    message: 'This route is not defined. Please use /signup instead',
   });
 };
 
 ////////////////////////////////////
 //////// with factory handler fn
 ////////////////////////////////////
+exports.getAllUsers = factory.getAll(User);
+exports.updateUser = factory.updateOne(User); //  dont try to update password with this
 exports.deleteUser = factory.deleteOne(User);
+exports.getUser = factory.getOne(User);
