@@ -92,6 +92,7 @@ exports.getAll = (Model, populateOptions) =>
     if (populateOptions) {
       query = query.populate(populateOptions);
     }
+    // const doc = await query.explain(); // this is to see the query performance
     const doc = await query;
 
     //Send Response
