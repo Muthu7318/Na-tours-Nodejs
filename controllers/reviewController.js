@@ -54,7 +54,10 @@ exports.setTourUserIds = (req, res, next) => {
 //////// with factory handler fn
 ////////////////////////////////////
 exports.getReview = factory.getOne(Review);
-exports.getAllReviews = factory.getAll(Review);
+exports.getAllReviews = factory.getAll(Review, {
+  path: 'tour',
+  select: 'name',
+});
 exports.deleteReview = factory.deleteOne(Review);
 exports.updateReview = factory.updateOne(Review);
 exports.createReview = factory.createOne(Review);

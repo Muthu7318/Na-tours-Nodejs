@@ -71,7 +71,7 @@ exports.getOne = (Model, populateOptions) =>
     });
   });
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     // to allow for nested GET reviews on tour (small hack)
     let filter = {};
@@ -86,8 +86,13 @@ exports.getAll = (Model) =>
       .sort()
       .limitFields()
       .paginate();
-
-    const doc = await features.query;
+    // console.log('req.query below');
+    // console.log(req.query);
+    let { query } = features;
+    if (populateOptions) {
+      query = query.populate(populateOptions);
+    }
+    const doc = await query;
 
     //Send Response
     res.status(200).json({
