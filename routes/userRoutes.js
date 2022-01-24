@@ -12,22 +12,17 @@ Router.route('/forgotPassword').post(authController.forgotPassword);
 
 Router.route('/resetPassword/:token').patch(authController.resetPassword);
 
-Router.route('/updateMyPassword').patch(
-  authController.protect,
-  authController.updatePassword
-);
+Router.use(authController.protect);
 
-Router.get(
-  '/me',
-  authController.protect,
-  userController.getMe,
-  userController.getUser
-);
+Router.route('/updateMyPassword').patch(authController.updatePassword);
 
-Router.patch('/updateMe', authController.protect, userController.updateMe);
+Router.get('/me', userController.getMe, userController.getUser);
 
-Router.delete('/deleteMe', authController.protect, userController.deleteMe);
+Router.patch('/updateMe', userController.updateMe);
 
+Router.delete('/deleteMe', userController.deleteMe);
+
+Router.use(authController.restrictTo('admin'));
 Router.route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser);
