@@ -1,6 +1,7 @@
 const User = require('../models/usermodel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 // const users = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/users.json`)
 // );
@@ -80,9 +81,8 @@ exports.updateUser = (req, res) => {
     message: 'This route is not defined yet',
   });
 };
-exports.deleteUser = (req, res) => {
-  res.status(200).json({
-    status: 'error',
-    message: 'This route is not defined yet',
-  });
-};
+
+////////////////////////////////////
+//////// with factory handler fn
+////////////////////////////////////
+exports.deleteUser = factory.deleteOne(User);
