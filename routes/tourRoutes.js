@@ -35,6 +35,8 @@ Router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(
 // tours-within?distance=230&center=-40,45&unit=km -- if we used query string
 // tours-within/230/center/-40,45/unit/km -- we are using params
 
+Router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
+
 Router.route('/')
   .get(tourController.getAllTour)
   .post(
