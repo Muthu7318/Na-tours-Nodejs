@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan'); //Thirdparty middleware
 const rateLimit = require('express-rate-limit');
@@ -16,7 +17,15 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // Global middlewares
+
+//serving static files
+// app.use(express.static(`${__dirname}/public/`));
+app.use(express.static(path.join(__dirname, 'public')));
+
 // set security http headers
 app.use(helmet());
 // development logging
@@ -57,8 +66,6 @@ app.use(
     ],
   })
 );
-//serving static files
-app.use(express.static(`${__dirname}/public/`));
 
 //test middleware
 app.use((req, res, next) => {
@@ -67,6 +74,9 @@ app.use((req, res, next) => {
   next();
 });
 // ROUTES
+app.get('*', (req, res) => {
+  res.status(200).render('base');
+});
 app.use('/api/v1/tours', tourRouter); // this is called as mounting a router
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
