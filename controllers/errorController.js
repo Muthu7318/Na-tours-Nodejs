@@ -47,14 +47,14 @@ const prodError = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log('err controller');
+  // console.log('err controller');
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
     devError(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log('prod');
+    // console.log('prod');
     let { error } = { ...err };
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldDB(error);

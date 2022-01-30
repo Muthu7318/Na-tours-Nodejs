@@ -47,7 +47,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  console.log(email, password);
   // 1) check if the email password exists
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
@@ -58,6 +58,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
+
   // 3) if everything ok, sent jwt to client
   createAndSendToken(user, 200, res);
 });
@@ -70,8 +71,11 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
-  console.log(token);
+
+  // console.log(token);
   if (!token) {
     return next(
       new AppError('you are not logged in. please log in to get access', 401)
@@ -79,7 +83,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   //2) validate the token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_secret);
-  console.log(decoded);
+  // console.log(decoded);
 
   //3) need to check whether the user exists
   const currentUser = await User.findById(decoded.id);

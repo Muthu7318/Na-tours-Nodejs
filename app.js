@@ -4,9 +4,11 @@ const express = require('express');
 const morgan = require('morgan'); //Thirdparty middleware
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 // it is a common practice to have all express code in app.js
 
 const AppError = require('./utils/appError');
@@ -26,6 +28,9 @@ app.set('views', path.join(__dirname, 'views'));
 //serving static files
 // app.use(express.static(`${__dirname}/public/`));
 app.use(express.static(path.join(__dirname, 'public')));
+
+//cors
+// app.use(cors());
 
 // set security http headers
 app.use(helmet());
@@ -49,6 +54,8 @@ app.use(
   })
 ); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
 
+app.use(cookieParser());
+
 // Data sanitization against nosql query injection
 app.use(mongoSanitize());
 // Data sanitization against XSS
@@ -71,7 +78,7 @@ app.use(
 //test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 // ROUTES

@@ -23,8 +23,8 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //2) build template
 
   //3) render template using data from 1
-  console.log('tour obj is');
-  console.log(tour);
+  // console.log('tour obj is');
+  // console.log(tour);
   res.status(200).render('tour', {
     title: tour.name,
     tour: tour,
@@ -32,7 +32,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getLoginForm = (req, res) => {
-  res.status(200).render('login', {
-    title: 'Log into your account',
-  });
+  res
+    .status(200)
+    .set('Content-Security-Policy', "connect-src 'self' http://127.0.0.1:3000/")
+    .render('login', {
+      title: 'Log into your account',
+    });
 };
