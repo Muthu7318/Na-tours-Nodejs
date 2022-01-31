@@ -53,7 +53,12 @@ app.use(
     limit: '10kb',
   })
 ); // app.use is used for defining the middleware..Express.json here is a middleware, it is basically a function that modify the incoming request data
-
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: '10kb',
+  })
+);
 app.use(cookieParser());
 
 // Data sanitization against nosql query injection

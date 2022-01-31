@@ -1,5 +1,5 @@
 /* eslint-disable */
-const formElement = document.querySelector('.form');
+const formElement = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 
 if (formElement) {
