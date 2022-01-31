@@ -1,3 +1,4 @@
+const multer = require('multer');
 const User = require('../models/usermodel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -5,6 +6,34 @@ const factory = require('./handlerFactory');
 // const users = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/users.json`)
 // );
+
+// --- for storing the image in our filesystem and formating the name
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  filename: (req, file, cb) => {
+    // user-userid-timestamp.jpeg --- filename format
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+// ---  this is to check whether we got image or not
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('not an image! please upload only images', 404), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserPhoto = upload.single('photo');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
