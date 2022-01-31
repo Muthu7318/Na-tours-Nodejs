@@ -2,6 +2,7 @@
 const formElement = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userData = document.querySelector('.form-user-data');
+const userPasswordForm = document.querySelector('.form-user-settings');
 
 if (formElement) {
   formElement.addEventListener('submit', (e) => {
@@ -79,26 +80,46 @@ if (userData) {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    updateData(name, email);
+    updateSettings({ name, email }, 'data');
   });
 }
 
-const updateData = async (name, email) => {
+if (userPasswordForm) {
+  userPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('.btn--savePassword').textContent = 'updating...';
+    const passwordCurrent = document.getElementById('password-current').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    await updateSettings(
+      { passwordCurrent, password, passwordConfirm },
+      'password'
+    );
+    document.querySelector('.btn--savePassword').textContent = 'Save password';
+    document.getElementById('password-current').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('password-confirm').value = '';
+  });
+}
+
+// type is either password or data
+const updateSettings = async (userInfoObj, type) => {
   try {
+    const url =
+      type === 'password'
+        ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword'
+        : 'http://127.0.0.1:3000/api/v1/users/updateMe';
     const res = await axios({
       method: 'PATCH',
-      url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
-      data: {
-        name: name,
-        email: email,
-      },
+      url: url,
+      data: userInfoObj,
       withCredentials: true,
     });
     if (res.data.status === 'success') {
       console.log(res.data);
-      showAlert('success', 'user data updated successfully');
+      showAlert('success', `${type} updated successfully`);
     }
   } catch (err) {
-    showAlert('error', err);
+    showAlert('error', 'Error while updating');
   }
 };

@@ -126,6 +126,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var formElement = document.querySelector('.form--login');
 var logOutBtn = document.querySelector('.nav__el--logout');
 var userData = document.querySelector('.form-user-data');
+var userPasswordForm = document.querySelector('.form-user-settings');
 
 if (formElement) {
   formElement.addEventListener('submit', function (e) {
@@ -196,42 +197,42 @@ function logOut() {
 }
 
 function _logOut() {
-  _logOut = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+  _logOut = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var res;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             console.log('logout');
-            _context3.prev = 1;
-            _context3.next = 4;
+            _context4.prev = 1;
+            _context4.next = 4;
             return axios({
               method: 'GET',
               url: 'http://127.0.0.1:3000/api/v1/users/logout'
             });
 
           case 4:
-            res = _context3.sent;
+            res = _context4.sent;
 
             if (res.data.status === 'success') {
               location.assign('/');
             }
 
-            _context3.next = 12;
+            _context4.next = 12;
             break;
 
           case 8:
-            _context3.prev = 8;
-            _context3.t0 = _context3["catch"](1);
-            console.log(_context3.t0.response);
+            _context4.prev = 8;
+            _context4.t0 = _context4["catch"](1);
+            console.log(_context4.t0.response);
             showAlert('error', 'Error Logging out. Try again');
 
           case 12:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[1, 8]]);
+    }, _callee4, null, [[1, 8]]);
   }));
   return _logOut.apply(this, arguments);
 }
@@ -260,55 +261,97 @@ if (userData) {
     e.preventDefault();
     var name = document.getElementById('name').value;
     var email = document.getElementById('email').value;
-    updateData(name, email);
+    updateSettings({
+      name: name,
+      email: email
+    }, 'data');
   });
 }
 
-var updateData = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, email) {
-    var res;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+if (userPasswordForm) {
+  userPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+      var passwordCurrent, password, passwordConfirm;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              e.preventDefault();
+              document.querySelector('.btn--savePassword').textContent = 'updating...';
+              passwordCurrent = document.getElementById('password-current').value;
+              password = document.getElementById('password').value;
+              passwordConfirm = document.getElementById('password-confirm').value;
+              _context2.next = 7;
+              return updateSettings({
+                passwordCurrent: passwordCurrent,
+                password: password,
+                passwordConfirm: passwordConfirm
+              }, 'password');
+
+            case 7:
+              document.querySelector('.btn--savePassword').textContent = 'Save password';
+              document.getElementById('password-current').value = '';
+              document.getElementById('password').value = '';
+              document.getElementById('password-confirm').value = '';
+
+            case 11:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function (_x4) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+} // type is either password or data
+
+
+var updateSettings = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(userInfoObj, type) {
+    var url, res;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context3.prev = 0;
+            url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:3000/api/v1/users/updateMe';
+            _context3.next = 4;
             return axios({
               method: 'PATCH',
-              url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
-              data: {
-                name: name,
-                email: email
-              },
+              url: url,
+              data: userInfoObj,
               withCredentials: true
             });
 
-          case 3:
-            res = _context2.sent;
+          case 4:
+            res = _context3.sent;
 
             if (res.data.status === 'success') {
               console.log(res.data);
-              showAlert('success', 'user data updated successfully');
+              showAlert('success', "".concat(type, " updated successfully"));
             }
 
-            _context2.next = 10;
+            _context3.next = 11;
             break;
 
-          case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            showAlert('error', _context2.t0);
+          case 8:
+            _context3.prev = 8;
+            _context3.t0 = _context3["catch"](0);
+            showAlert('error', 'Error while updating');
 
-          case 10:
+          case 11:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee3, null, [[0, 8]]);
   }));
 
-  return function updateData(_x4, _x5) {
-    return _ref2.apply(this, arguments);
+  return function updateSettings(_x5, _x6) {
+    return _ref3.apply(this, arguments);
   };
 }();
 },{}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
