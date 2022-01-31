@@ -11,8 +11,9 @@ Router.use((req, res, next) => {
   );
   next();
 });
-Router.use(authController.isLoggedIn);
-Router.get('/', viewsController.getOverview);
-Router.get('/tour/:slug', viewsController.getTour);
-Router.get('/login', viewsController.getLoginForm);
+
+Router.get('/', authController.isLoggedIn, viewsController.getOverview);
+Router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
+Router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
+Router.get('/me', authController.protect, viewsController.getAccount);
 module.exports = Router;
