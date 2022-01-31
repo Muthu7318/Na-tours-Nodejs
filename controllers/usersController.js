@@ -13,6 +13,7 @@ const filterObj = (obj, ...allowedFields) => {
       newObj[el] = obj[el];
     }
   });
+  console.log(newObj);
   return newObj;
 };
 
@@ -32,6 +33,9 @@ exports.getMe = (req, res, next) => {
   next();
 };
 exports.updateMe = catchAsync(async (req, res, next) => {
+  console.log('udpate Me');
+  console.log(req.body);
+  console.log(req.user);
   // 1) create error if posts password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -46,7 +50,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // 3) update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
-    runValidatiors: true,
+    runValidators: true,
   });
 
   res.status(200).json({

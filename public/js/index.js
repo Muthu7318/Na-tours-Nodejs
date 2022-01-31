@@ -1,6 +1,7 @@
 /* eslint-disable */
 const formElement = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+const userData = document.querySelector('.form-user-data');
 
 if (formElement) {
   formElement.addEventListener('submit', (e) => {
@@ -70,5 +71,34 @@ const hideAlert = () => {
   const el = document.querySelector('.alert');
   if (el) {
     el.parentElement.removeChild(el);
+  }
+};
+
+if (userData) {
+  userData.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    updateData(name, email);
+  });
+}
+
+const updateData = async (name, email) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
+      data: {
+        name: name,
+        email: email,
+      },
+      withCredentials: true,
+    });
+    if (res.data.status === 'success') {
+      console.log(res.data);
+      showAlert('success', 'user data updated successfully');
+    }
+  } catch (err) {
+    showAlert('error', err);
   }
 };
