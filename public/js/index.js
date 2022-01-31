@@ -1,5 +1,6 @@
 /* eslint-disable */
 const formElement = document.querySelector('.form');
+const logOutBtn = document.querySelector('.nav__el--logout');
 
 if (formElement) {
   formElement.addEventListener('submit', (e) => {
@@ -37,6 +38,26 @@ const login = async (email, password, formData) => {
     console.log(err.response.data.message);
   }
 };
+
+async function logOut() {
+  console.log('logout');
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+    });
+    if (res.data.status === 'success') {
+      location.reload(true);
+    }
+  } catch (err) {
+    console.log(err.response);
+    showAlert('error', 'Error Logging out. Try again');
+  }
+}
+
+if (logOutBtn) {
+  logOutBtn.addEventListener('click', logOut);
+}
 
 const showAlert = (type, message) => {
   hideAlert();

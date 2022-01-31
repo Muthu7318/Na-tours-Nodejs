@@ -8,10 +8,13 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 
   //3) Render that template using tour data from 1
 
-  res.status(200).render('overview', {
-    title: 'All Tours',
-    tours: tours,
-  });
+  res
+    .status(200)
+    // .set('Content-Security-Policy', "connect-src 'self' http://127.0.0.1:3000/")
+    .render('overview', {
+      title: 'All Tours',
+      tours: tours,
+    });
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
@@ -25,16 +28,19 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //3) render template using data from 1
   // console.log('tour obj is');
   // console.log(tour);
-  res.status(200).render('tour', {
-    title: tour.name,
-    tour: tour,
-  });
+  res
+    .status(200)
+    // .set('Content-Security-Policy', "connect-src 'self' http://127.0.0.1:3000/")
+    .render('tour', {
+      title: tour.name,
+      tour: tour,
+    });
 });
 
 exports.getLoginForm = (req, res) => {
   res
     .status(200)
-    .set('Content-Security-Policy', "connect-src 'self' http://127.0.0.1:3000/")
+    // .set('Content-Security-Policy', "connect-src 'self' http://127.0.0.1:3000/")
     .render('login', {
       title: 'Log into your account',
     });
