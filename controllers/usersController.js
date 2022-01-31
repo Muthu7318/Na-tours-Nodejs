@@ -13,7 +13,7 @@ const filterObj = (obj, ...allowedFields) => {
       newObj[el] = obj[el];
     }
   });
-  console.log(newObj);
+  // console.log(newObj);
   return newObj;
 };
 
@@ -33,9 +33,8 @@ exports.getMe = (req, res, next) => {
   next();
 };
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log('udpate Me');
+  console.log(req.file);
   console.log(req.body);
-  console.log(req.user);
   // 1) create error if posts password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(

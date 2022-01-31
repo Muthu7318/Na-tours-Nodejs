@@ -47,7 +47,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // console.log(email, password);
   // 1) check if the email password exists
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
