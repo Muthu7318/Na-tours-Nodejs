@@ -259,12 +259,12 @@ var hideAlert = function hideAlert() {
 if (userData) {
   userData.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    updateSettings({
-      name: name,
-      email: email
-    }, 'data');
+    var form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    console.log(form);
+    updateSettings(form, 'data');
   });
 }
 
@@ -332,6 +332,7 @@ var updateSettings = /*#__PURE__*/function () {
             if (res.data.status === 'success') {
               console.log(res.data);
               showAlert('success', "".concat(type, " updated successfully"));
+              location.reload();
             }
 
             _context3.next = 11;
