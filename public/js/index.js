@@ -4,6 +4,8 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userData = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-settings');
 
+const bookBtn = document.getElementById('bookTour');
+
 if (formElement) {
   formElement.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ const login = async (email, password, formData) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/login',
+      url: '/api/v1/users/login',
       data: {
         email: email,
         password: password,
@@ -46,7 +48,7 @@ async function logOut() {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+      url: '/api/v1/users/logout',
     });
     if (res.data.status === 'success') {
       location.assign('/');
@@ -110,8 +112,8 @@ const updateSettings = async (userInfoObj, type) => {
   try {
     const url =
       type === 'password'
-        ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword'
-        : 'http://127.0.0.1:3000/api/v1/users/updateMe';
+        ? '/api/v1/users/updateMyPassword'
+        : '/api/v1/users/updateMe';
     const res = await axios({
       method: 'PATCH',
       url: url,
@@ -127,3 +129,31 @@ const updateSettings = async (userInfoObj, type) => {
     showAlert('error', 'Error while updating');
   }
 };
+
+const stripe = Stripe(
+  'pk_test_51KOMKcSCJJiPCmeEWbIVaoCRqzyizHeqFt3iEzZ4iYuKwMBuzLRgWXIWYqo35GQPVAeKIQfFvPIC6jc5Vfodj83A00gsPNA3kF'
+);
+const bookTour = async (tourId) => {
+  // get checkout session from api
+  const session = await axios.get(
+    `/api/v1/bookings/checkout-session/${tourId}`,
+    {
+      withCredentials: true,
+    }
+  );
+  // fetch(`http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`, {
+  //   credentials: 'include',
+  // })
+  //   .then((response) => response.json())
+  //   .then((data) => console.log(data));
+  console.log(session);
+  // create checkout form + charge credit card
+};
+
+if (bookBtn) {
+  bookBtn.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing';
+    const tourId = e.target.dataset.tourId;
+    bookTour(tourId);
+  });
+}

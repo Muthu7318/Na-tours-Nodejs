@@ -7,7 +7,7 @@
   "description": "learning node express and mongodb",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "start:prod": "set process.env.NODE_ENV=production&&nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
@@ -20,6 +20,7 @@
     "@sendgrid/mail": "^7.6.0",
     "axios": "^0.25.0",
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

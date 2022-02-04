@@ -9,6 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 // it is a common practice to have all express code in app.js
 
 const AppError = require('./utils/appError');
@@ -30,9 +31,13 @@ app.set('views', path.join(__dirname, 'views'));
 // app.use(express.static(`${__dirname}/public/`));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//cors
-// app.use(cors());
-
+// cors;
+app.use(
+  cors({
+    origin: 'http://localhost:3000', //(Whatever your frontend url is)
+    credentials: true, // <= Accept credentials (cookies) sent by the client
+  })
+);
 // set security http headers
 app.use(helmet());
 // development logging
@@ -80,6 +85,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression());
 
 //test middleware
 app.use((req, res, next) => {
